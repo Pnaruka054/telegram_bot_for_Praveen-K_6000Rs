@@ -2,9 +2,8 @@ require("dotenv").config();
 const TelegramBot = require("node-telegram-bot-api");
 const schedule = require("node-schedule");
 const fs = require("fs");
-const {createCanvas, loadImage, registerFont} = require('canvas');
-
-
+const { createCanvas, loadImage, registerFont } = require('canvas');
+const http = require('http');
 const path = require("path");
 
 const bot = new TelegramBot(process.env.BOT_TOKEN);
@@ -88,7 +87,7 @@ const sendSession = async () => {
                 caption: "💸✅",
                 reply_markup: {
                     inline_keyboard: [
-                        [{text: "✅ Register Now ✅", url: "https://1wtrog.life/?p=tvyn"}]
+                        [{ text: "✅ Register Now ✅", url: "https://1wtrog.life/?p=tvyn" }]
                     ]
                 }
             };
@@ -124,3 +123,19 @@ postingTimes.forEach((cronTime) => {
         sendSession();
     });
 });
+
+async function welcome() {
+    await bot.sendMessage(chatId, `🤖 Bot is live! Glad to have you here!`);
+}
+
+welcome()
+
+// const server = http.createServer((req, res) => {
+//     res.writeHead(200);
+//     res.end('Bot is running');
+// });
+
+// const PORT = process.env.PORT || 3000;
+// server.listen(PORT, () => {
+//     console.log(`Server listening on port ${PORT}`);
+// });
