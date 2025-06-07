@@ -130,12 +130,12 @@ async function welcome() {
 
 welcome()
 
-// const server = http.createServer((req, res) => {
-//     res.writeHead(200);
-//     res.end('Bot is running');
-// });
+ const server = http.createServer((req, res) => {
+    res.writeHead(200);
+    res.end('Bot is running');
+ });
 
-// const PORT = process.env.PORT || 3000;
-// server.listen(PORT, () => {
-//     console.log(`Server listening on port ${PORT}`);
-// });
+ const PORT = process.env.PORT || 3000;
+ server.listen(PORT, () => {
+     console.log(`Server listening on port ${PORT}`);
+ });
