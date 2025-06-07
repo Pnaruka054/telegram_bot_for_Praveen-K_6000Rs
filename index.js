@@ -119,12 +119,8 @@ const sendSession = async () => {
 };
 
 // Setup all scheduled sessions
-// postingTimes.forEach((cronTime) => {
-//     schedule.scheduleJob(cronTime, () => {
-//         sendSession();
-//     });
-// });
-
-schedule.scheduleJob('*/2 * * * *', () => {
-    sendSession();
+postingTimes.forEach((cronTime) => {
+    schedule.scheduleJob(cronTime, () => {
+        sendSession();
+    });
 });
