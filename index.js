@@ -7,7 +7,7 @@ const bot = new TelegramBot(process.env.BOT_TOKEN);
 const chatId = process.env.CHAT_ID;
 
 // Posting times (24hr cron): 9am, 11am, 1pm, 3pm, 5pm, 7pm, 9pm
-const postingTimes = ["0 9 * * *", "0 11 * * *", "0 13 * * *", "0 15 * * *", "0 17 * * *", "0 19 * * *", "0 21 * * *"];
+// const postingTimes = ["0 9 * * *", "0 11 * * *", "0 13 * * *", "0 15 * * *", "0 17 * * *", "0 19 * * *", "0 21 * * *"];
 
 const sendSession = async () => {
     let signalCount = 1;
@@ -64,8 +64,12 @@ const sendSession = async () => {
 };
 
 // Set up cron jobs for each fixed time
-postingTimes.forEach((cronTime) => {
-    schedule.scheduleJob(cronTime, () => {
-        sendSession();
-    });
+// postingTimes.forEach((cronTime) => {
+//     schedule.scheduleJob(cronTime, () => {
+//         sendSession();
+//     });
+// });
+
+schedule.scheduleJob('*/2 * * * *', () => {
+    sendSession();
 });
