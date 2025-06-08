@@ -10,7 +10,7 @@ const bot = new TelegramBot(process.env.BOT_TOKEN);
 const chatId = process.env.CHAT_ID;
 
 // Posting times: 9am, 11am, 1pm, 3pm, 5pm, 7pm, 9pm
-const postingTimes = ["40 9 * * *", "0 11 * * *", "0 13 * * *", "0 15 * * *", "0 17 * * *", "0 19 * * *", "0 21 * * *"];
+const postingTimes = ["26 9 * * *", "0 11 * * *", "0 13 * * *", "0 15 * * *", "0 17 * * *", "0 19 * * *", "0 21 * * *"];
 
 // Generate all multipliers between 1.40 to 6.00
 const signals = [];
@@ -125,7 +125,7 @@ const sendSession = async () => {
 
 // Setup all scheduled sessions
 postingTimes.forEach((cronTime) => {
-    cron.schedule(cronTime, () => {
+    schedule.scheduleJob(cronTime, () => {
         sendSession();
     });
 });
@@ -136,12 +136,12 @@ async function welcome() {
 
 welcome()
 
-const server = http.createServer((req, res) => {
+ const server = http.createServer((req, res) => {
     res.writeHead(200);
     res.end('Bot is running');
-});
+ });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
-});
+ const PORT = process.env.PORT || 3000;
+ server.listen(PORT, () => {
+     console.log(`Server listening on port ${PORT}`);
+ });
