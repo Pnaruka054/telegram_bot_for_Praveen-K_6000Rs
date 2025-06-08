@@ -1,6 +1,6 @@
 require("dotenv").config();
 const TelegramBot = require("node-telegram-bot-api");
-const schedule = require("node-schedule");
+const cron = require("node-cron");
 const fs = require("fs");
 const { createCanvas, loadImage, registerFont } = require('canvas');
 const http = require('http');
@@ -10,7 +10,7 @@ const bot = new TelegramBot(process.env.BOT_TOKEN);
 const chatId = process.env.CHAT_ID;
 
 // Posting times: 9am, 11am, 1pm, 3pm, 5pm, 7pm, 9pm
-const postingTimes = ["0 9 * * *", "0 11 * * *", "0 13 * * *", "0 15 * * *", "0 17 * * *", "0 19 * * *", "0 21 * * *"];
+const postingTimes = ["40 9 * * *", "0 11 * * *", "0 13 * * *", "0 15 * * *", "0 17 * * *", "0 19 * * *", "0 21 * * *"];
 
 // Generate all multipliers between 1.40 to 6.00
 const signals = [];
@@ -29,6 +29,11 @@ async function generateImageWithText(multiplier, amount) {
         fs.mkdirSync(outputDir);
     }
 
+    // ✅ If image already exists, return the path
+    if (fs.existsSync(outputPath)) {
+        return outputPath;
+    }
+
     // Load base image
     const image = await loadImage(basePath);
 
@@ -44,10 +49,10 @@ async function generateImageWithText(multiplier, amount) {
     ctx.fillStyle = 'white';
     ctx.textBaseline = 'top';
 
-    // Draw multiplier text at approx (235, 150)
+    // Draw multiplier text
     ctx.fillText(`${multiplier}x`, 320, 130);
 
-    // Draw amount text at approx (680, 155)
+    // Draw amount text
     ctx.fillText(`${amount}`, 730, 130);
 
     // Save the canvas to a file (JPEG)
@@ -59,6 +64,7 @@ async function generateImageWithText(multiplier, amount) {
     });
     stream.pipe(out);
 
+    // Return path after stream finishes
     return new Promise((resolve, reject) => {
         out.on('finish', () => resolve(outputPath));
         out.on('error', reject);
@@ -119,7 +125,7 @@ const sendSession = async () => {
 
 // Setup all scheduled sessions
 postingTimes.forEach((cronTime) => {
-    schedule.scheduleJob(cronTime, () => {
+    cron.schedule(cronTime, () => {
         sendSession();
     });
 });
@@ -130,12 +136,12 @@ async function welcome() {
 
 welcome()
 
-// const server = http.createServer((req, res) => {
-//     res.writeHead(200);
-//     res.end('Bot is running');
-// });
+const server = http.createServer((req, res) => {
+    res.writeHead(200);
+    res.end('Bot is running');
+});
 
-// const PORT = process.env.PORT || 3000;
-// server.listen(PORT, () => {
-//     console.log(`Server listening on port ${PORT}`);
-// });
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+});
